@@ -1,0 +1,56 @@
+<div class="container mt-5">
+  <h1 class="mb-4 text-center">{{ labels.pageTitle }}</h1>
+  
+  <app-alert 
+    [message]="errorMessage"
+    type="danger"
+    (dismiss)="dismissError()">
+  </app-alert>
+  
+  @if (loading$ | async) {
+    <app-loading-spinner message="Loading games..."></app-loading-spinner>
+  } @else {
+    <div class="row">
+    <div class="col-12">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>{{ labels.tableHeaders.id }}</th>
+              <th>{{ labels.tableHeaders.gameTitle }}</th>
+              <th>{{ labels.tableHeaders.genre }}</th>
+              <th>{{ labels.tableHeaders.ageRating }}</th>
+              <th>{{ labels.tableHeaders.price }}</th>
+              <th>{{ labels.tableHeaders.author }}</th>
+              <th>{{ labels.tableHeaders.description }}</th>
+              <th>{{ labels.tableHeaders.actions }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (game of games$ | async; track game.id) {
+              <tr>
+                <td>{{ game.id }}</td>
+                <td>{{ game.name }}</td>
+                <td>{{ game.genre }}</td>
+                <td>{{ game.ageRating }}</td>
+                <td>${{ game.price.toFixed(2) }}</td>
+                <td>{{ game.author }}</td>
+                <td class="description-cell">{{ game.description }}</td>
+                <td>
+                  <a [routerLink]="['/edit', game.id]" class="btn btn-primary btn-sm">
+                    {{ labels.buttons.edit }}
+                  </a>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="8" class="text-center">{{ labels.messages.noGamesFound }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  }
+</div>

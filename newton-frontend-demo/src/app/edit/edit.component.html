@@ -1,0 +1,223 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <app-alert 
+        [message]="errorMessage"
+        type="danger"
+        (dismiss)="dismissError()">
+      </app-alert>
+      
+      <app-alert 
+        [message]="successMessage"
+        type="success"
+        (dismiss)="dismissSuccess()">
+      </app-alert>
+      
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h2 class="mb-0">{{ labels.pageTitle }}</h2>
+        </div>
+        <div class="card-body">
+          @if (game$ | async; as game) {
+            <form #gameForm="ngForm" (ngSubmit)="gameForm.valid && saveChanges(game)" novalidate>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="gameId" class="form-label">Game ID</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="gameId" 
+                    [value]="game.id" 
+                    disabled
+                  >
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="gamePrice" class="form-label">{{ labels.formLabels.price }}</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    [class.is-invalid]="price.invalid && (price.dirty || price.touched)"
+                    id="gamePrice" 
+                    [(ngModel)]="game.price" 
+                    name="price"
+                    #price="ngModel"
+                    required
+                    min="0"
+                    step="0.01"
+                  >
+                  @if (price.invalid && (price.dirty || price.touched)) {
+                    <div class="invalid-feedback">
+                      @if (price.errors?.['required']) {
+                        {{ validationMessages.price.required }}
+                      }
+                      @if (price.errors?.['min']) {
+                        {{ validationMessages.price.min }}
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="gameName" class="form-label">{{ labels.formLabels.name }}</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [class.is-invalid]="name.invalid && (name.dirty || name.touched)"
+                  id="gameName" 
+                  [(ngModel)]="game.name" 
+                  name="name"
+                  #name="ngModel"
+                  required
+                  minlength="2"
+                  maxlength="100"
+                >
+                @if (name.invalid && (name.dirty || name.touched)) {
+                  <div class="invalid-feedback">
+                    @if (name.errors?.['required']) {
+                      {{ validationMessages.name.required }}
+                    }
+                    @if (name.errors?.['minlength']) {
+                      {{ validationMessages.name.minlength }}
+                    }
+                    @if (name.errors?.['maxlength']) {
+                      {{ validationMessages.name.maxlength }}
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="gameGenre" class="form-label">{{ labels.formLabels.genre }}</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    [class.is-invalid]="genre.invalid && (genre.dirty || genre.touched)"
+                    id="gameGenre" 
+                    [(ngModel)]="game.genre" 
+                    name="genre"
+                    #genre="ngModel"
+                    required
+                    minlength="2"
+                    maxlength="50"
+                  >
+                  @if (genre.invalid && (genre.dirty || genre.touched)) {
+                    <div class="invalid-feedback">
+                      @if (genre.errors?.['required']) {
+                        {{ validationMessages.genre.required }}
+                      }
+                      @if (genre.errors?.['minlength']) {
+                        {{ validationMessages.genre.minlength }}
+                      }
+                      @if (genre.errors?.['maxlength']) {
+                        {{ validationMessages.genre.maxlength }}
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="gameAgeRating" class="form-label">{{ labels.formLabels.ageRating }}</label>
+                  <select 
+                    class="form-select" 
+                    [class.is-invalid]="ageRating.invalid && (ageRating.dirty || ageRating.touched)"
+                    id="gameAgeRating" 
+                    [(ngModel)]="game.ageRating" 
+                    name="ageRating"
+                    #ageRating="ngModel"
+                    required
+                  >
+                    @for (rating of ageRatings; track rating.value) {
+                      <option [value]="rating.value">{{ rating.label }}</option>
+                    }
+                  </select>
+                  @if (ageRating.invalid && (ageRating.dirty || ageRating.touched)) {
+                    <div class="invalid-feedback">
+                      {{ validationMessages.ageRating.required }}
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="gameAuthor" class="form-label">{{ labels.formLabels.author }}</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [class.is-invalid]="author.invalid && (author.dirty || author.touched)"
+                  id="gameAuthor" 
+                  [(ngModel)]="game.author" 
+                  name="author"
+                  #author="ngModel"
+                  required
+                  minlength="2"
+                  maxlength="100"
+                >
+                @if (author.invalid && (author.dirty || author.touched)) {
+                  <div class="invalid-feedback">
+                    @if (author.errors?.['required']) {
+                      {{ validationMessages.author.required }}
+                    }
+                    @if (author.errors?.['minlength']) {
+                      {{ validationMessages.author.minlength }}
+                    }
+                    @if (author.errors?.['maxlength']) {
+                      {{ validationMessages.author.maxlength }}
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="mb-3">
+                <label for="gameDescription" class="form-label">{{ labels.formLabels.description }}</label>
+                <textarea 
+                  class="form-control" 
+                  [class.is-invalid]="description.invalid && (description.dirty || description.touched)"
+                  id="gameDescription" 
+                  [(ngModel)]="game.description" 
+                  name="description"
+                  #description="ngModel"
+                  rows="4"
+                  required
+                  minlength="10"
+                  maxlength="500"
+                ></textarea>
+                @if (description.invalid && (description.dirty || description.touched)) {
+                  <div class="invalid-feedback">
+                    @if (description.errors?.['required']) {
+                      {{ validationMessages.description.required }}
+                    }
+                    @if (description.errors?.['minlength']) {
+                      {{ validationMessages.description.minlength }}
+                    }
+                    @if (description.errors?.['maxlength']) {
+                      {{ validationMessages.description.maxlength }}
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary" (click)="cancel()">
+                  {{ labels.buttons.cancel }}
+                </button>
+                <button 
+                  type="submit" 
+                  class="btn btn-success"
+                  [disabled]="gameForm.invalid">
+                  {{ labels.buttons.save }}
+                </button>
+              </div>
+            </form>
+          } @else {
+            <div class="alert alert-warning">
+              Loading game data...
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

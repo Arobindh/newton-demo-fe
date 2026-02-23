@@ -1,0 +1,25 @@
+.table-responsive {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+h1 {
+  color: #333;
+  font-weight: bold;
+}
+
+.btn-primary {
+  padding: 0.375rem 0.75rem;
+}
+
+.description-cell {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge {
+  font-size: 0.85rem;
+}
