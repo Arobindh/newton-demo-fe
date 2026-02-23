@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, Subject, of } from 'rxjs';
+import { Observable, BehaviorSubject, Subject, of, throwError } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
 import { Game } from '../model/game';
 import { SERVICE_MESSAGES } from './game.service.messages';
@@ -62,7 +62,7 @@ export class GameService {
       }),
       catchError(error => {
         this.errorSubject.next(SERVICE_MESSAGES.errors.updateGame);
-        return of({} as Game);
+        return throwError(() => error);
       })
     );
   }
