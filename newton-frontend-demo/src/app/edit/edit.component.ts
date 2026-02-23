@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -34,7 +34,8 @@ export class EditComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private gameService: GameService
+    private gameService: GameService,
+    private cdr: ChangeDetectorRef
   ) {
     this.error$ = this.gameService.error$;
   }
@@ -42,10 +43,12 @@ export class EditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.errorSubscription = this.error$.subscribe(error => {
       this.errorMessage = error;
+      this.cdr.markForCheck();
     });
     
     this.successSubscription = this.success$.subscribe(message => {
       this.successMessage = message;
+      this.cdr.markForCheck();
     });
     this.game$ = this.route.params.pipe(
       switchMap(params => {
@@ -63,8 +66,11 @@ export class EditComponent implements OnInit, OnDestroy {
     this.gameService.updateGame(this.gameId, gameUpdate).subscribe({
       next: () => {
         this.successSubject.next(this.labels.messages.updateSuccess);
-        this.router.navigate(['/home']);
-      }
+        setTimeout(() => {
+          this.router.navigate(['/home']);
+        }, 1000);
+      },
+      error: () => { }
     });
   }
 
